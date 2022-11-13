@@ -20,8 +20,6 @@ packages
 /.vs/*
 .vs/
 echo ".vs/" >> .gitignore
-echo "*.sln" >> .gitignore
-*.sln
 /AdminModules/Parkway.CBS.Admin.Module/bin/Debug/net5.0
 /AdminModules/Parkway.CBS.Admin.Module/obj
 /lib/Parkway.Tenant/obj

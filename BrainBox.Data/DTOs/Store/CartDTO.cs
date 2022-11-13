@@ -8,5 +8,7 @@ namespace BrainBox.Data.DTOs.Store
         public UserDTO User { get; set; }
 
         public virtual IList<CartProductDTO> CartProducts { get; set; }
+
+        public decimal TotalCostOfProducts { get; set; }
     }
 }

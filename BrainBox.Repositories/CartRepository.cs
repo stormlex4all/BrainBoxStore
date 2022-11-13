@@ -26,6 +26,7 @@ namespace BrainBox.Repositories
                 Id = c.Id,
                 User = new UserDTO { Id = c.User.Id, Email = c.User.Email},
                 CartProducts = c.CartProducts.Select(c => new CartProductDTO() { Id = c.Id, ProductName = c.Product.Name, ProductAmount = c.Product.Price, ProductCategoryName = c.Product.ProductCategory.Name }).ToList(),
+                TotalCostOfProducts = c.CartProducts.Sum(p =>p.Product.Price)
             }).FirstOrDefaultAsync();
         }
     }

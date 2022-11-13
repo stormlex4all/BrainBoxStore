@@ -88,5 +88,14 @@ namespace BrainBox.Web.Controllers.Handlers
         {
             return await _cartProductRepository.GetAllAsync(c => c.Cart.User.Id == _cartProductRepository.GetTokenUserId(), page, recordsPerPage);
         }
+
+        /// <summary>
+        /// Get all products in cart for user
+        /// </summary>
+        /// <returns></returns>
+        public async Task<CartDTO> GetByUserIdAsync()
+        {
+            return await _cartRepository.GetByUserIdAsync(_cartProductRepository.GetTokenUserId());
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace BrainBox.Web.Controllers
         }
 
         /// <summary>
-        /// Get Products in a cart using user Id
+        /// Get List of Products in a cart
         /// </summary>
         /// <param name="page"></param>
         /// <param name="recordsPerPage"></param>
@@ -81,6 +81,27 @@ namespace BrainBox.Web.Controllers
                 StoreToken();
                 _logger.LogInformation($"Trying to GetProductsInCart");
                 return Ok(new APIResponse<IList<CartProductDTO>> { ResponseObject = await _cartProductHandler.GetByUserIdAsync(page, recordsPerPage) });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, string.Format($"GetProductsInCart exception {exception.Message}"));
+                return BadRequest(new APIResponse<string> { Error = true, ResponseObject = ResponseLang.Genericexception() });
+            }
+        }
+
+        /// <summary>
+        /// Get cart with all products in the cart for user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet()]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<CartDTO>))]
+        public async Task<IActionResult> GetProductsInCart()
+        {
+            try
+            {
+                StoreToken();
+                _logger.LogInformation($"Trying to GetProductsInCart");
+                return Ok(new APIResponse<CartDTO> { ResponseObject = await _cartProductHandler.GetByUserIdAsync() });
             }
             catch (Exception exception)
             {

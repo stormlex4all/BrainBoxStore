@@ -35,5 +35,11 @@ namespace BrainBox.Web.Controllers.Handlers.Contracts
         /// <returns></returns>
         /// <exception cref="CartProductActionException"></exception>
         Task<bool> DeleteByProductIdAsync(string productId);
+
+        /// <summary>
+        /// Get all products in cart for user
+        /// </summary>
+        /// <returns></returns>
+        Task<CartDTO> GetByUserIdAsync();
     }
 }

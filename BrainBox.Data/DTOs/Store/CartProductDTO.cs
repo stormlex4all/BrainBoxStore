@@ -12,6 +12,8 @@ namespace BrainBox.Data.DTOs.Store
 
         public decimal ProductAmount { get; set; }
 
+        public decimal TotalAmount { get; set; }
+
         public string ProductCategoryName { get; set; }
     }
 }

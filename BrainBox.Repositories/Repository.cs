@@ -245,7 +245,6 @@ namespace BrainBox.Repositories
             if (string.IsNullOrEmpty(token))
             {
                 throw new Exception("Token was not saved"); 
-                return string.Empty;
             }
             return ((JwtSecurityToken)(new JwtSecurityTokenHandler()).ReadToken(token)).Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
         }

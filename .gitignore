@@ -5,3 +5,8 @@
 /.vs/BrainBoxStore/FileContentIndex
 /.vs
 /README.txt.bak
+/BrainBox.Core/obj
+/BrainBox.Data/obj
+/BrainBox.Repositories/obj
+/BrainBox.Web/obj
+*.user

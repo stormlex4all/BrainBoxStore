@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = Parkway.Tenant.UnitTests
+build_property.ProjectDir = C:\docs\repos\BrainBoxStore\BrainBox.Tests\Parkway.Tenant.UnitTests\

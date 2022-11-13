@@ -237,9 +237,8 @@ namespace BrainBox.Repositories
         /// <summary>
         /// Get user Id from token
         /// </summary>
-        /// <param name="token"></param>
         /// <returns></returns>
-        private string GetTokenUserId()
+        public string GetTokenUserId()
         {
             string token = _currentActiveToken.Token;
             if (string.IsNullOrEmpty(token))

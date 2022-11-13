@@ -40,7 +40,7 @@ namespace BrainBox.Web.Controllers.Handlers
             {
                 throw new ProductActionException(ResponseLang.CouldNotCreateRecord(nameof(Product)));
             }
-            return new() { Id = id, Name = product.Name, ProductCategory = new ProductCategoryDTO { Id = product.ProductCategoryId} };
+            return new() { Id = id, Name = product.Name, Price = product.Price, ProductCategory = new ProductCategoryDTO { Id = product.ProductCategoryId} };
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace BrainBox.Web.Controllers.Handlers
         /// Get all product records
         /// </summary>
         /// <returns></returns>
-        public async Task<IList<ProductDTO>> GetAllAsync()
+        public async Task<IList<ProductDTO>> GetAllAsync(int page, int recordsPerPage)
         {
-            return await _productRepository.GetAllRecords();
+            return await _productRepository.GetAllRecords(page, recordsPerPage);
         }
 
         /// <summary>

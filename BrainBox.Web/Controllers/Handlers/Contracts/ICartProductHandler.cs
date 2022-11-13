@@ -11,14 +11,15 @@ namespace BrainBox.Web.Controllers.Handlers.Contracts
         /// <param name="cartProduct"></param>
         /// <returns></returns>
         /// <exception cref="CartProductActionException"></exception>
-        Task<CartProductDTO> CreateAsync(CartProductDTO cartProduct);
+        Task<CartProductDTO> CreateAsync(CartProductCreateDTO cartProduct);
 
         /// <summary>
         /// Get all cart products using userId
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="page"></param>
+        /// <param name="recordsPerPage"></param>
         /// <returns></returns>
-        Task<IList<CartProductDTO>> GetByUserIdAsync(string userId);
+        Task<IList<CartProductDTO>> GetByUserIdAsync(int page, int recordsPerPage);
 
         /// <summary>
         /// Delete Delete product from cart using id
@@ -30,10 +31,9 @@ namespace BrainBox.Web.Controllers.Handlers.Contracts
         /// <summary>
         /// Delete product from cart using userId and productId
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="productId"></param>
         /// <returns></returns>
         /// <exception cref="CartProductActionException"></exception>
-        Task<bool> DeleteAsync(string userId, string productId);
+        Task<bool> DeleteByProductIdAsync(string productId);
     }
 }

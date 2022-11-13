@@ -100,5 +100,11 @@ namespace BrainBox.Repositories.Contracts
         /// <param name="records"></param>
         /// <returns></returns>
         Task<bool> Delete(IEnumerable<T> records);
+
+        /// <summary>
+        /// Get user Id from token
+        /// </summary>
+        /// <returns></returns>
+        string GetTokenUserId();
     }
 }

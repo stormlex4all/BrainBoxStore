@@ -42,6 +42,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to CreateProductCategory: {JsonConvert.SerializeObject(productCategory)}");
                 if (!ModelState.IsValid)
                 {
@@ -69,15 +70,19 @@ namespace BrainBox.Web.Controllers
         /// <summary>
         /// Get All Product Categories
         /// </summary>
+        /// <param name="page"></param>
+        /// <param name="recordsPerPage"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{page}/{recordsPerPage}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<IList<ProductCategoryDTO>>))]
-        public async Task<IActionResult> GetAllProductCategories()
+        public async Task<IActionResult> GetAllProductCategories(int page = 0, int recordsPerPage = 10)
         {
+            StoreToken();
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to GetAllProductCategories:");
-                return Ok(new APIResponse<IList<ProductCategoryDTO>> { ResponseObject = await _productCategoryHandler.GetAllAsync() });
+                return Ok(new APIResponse<IList<ProductCategoryDTO>> { ResponseObject = await _productCategoryHandler.GetAllAsync(page, recordsPerPage) });
             }
             catch (Exception exception)
             {
@@ -98,6 +103,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to GetProductCategoryById, id: {id}");
                 return Ok(new APIResponse<ProductCategoryDTO> { ResponseObject = await _productCategoryHandler.GetByIdAsync(id) });
             }
@@ -120,6 +126,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 productCategory.Id = productCategoryId;
                 _logger.LogInformation($"Trying to UpdateProductCategory: {JsonConvert.SerializeObject(productCategory)}");
                 if (!ModelState.IsValid)
@@ -155,6 +162,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to DeleteProductCategory, id: {productCategoryId}");
                 if (await _productCategoryHandler.DeleteAsync(productCategoryId))
                 {

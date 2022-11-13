@@ -20,7 +20,7 @@ namespace BrainBox.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<IList<CartProductDTO>> GetAllAsync(Expression<Func<CartProduct, bool>> predicate)
+        public async Task<IList<CartProductDTO>> GetAllAsync(Expression<Func<CartProduct, bool>> predicate, int page, int recordsPerPage)
         {
             return await _dbSet.Where(c => !c.IsDeleted).Where(predicate).Select(c => new CartProductDTO
             {
@@ -29,7 +29,7 @@ namespace BrainBox.Repositories
                 ProductId = c.Product.Id,
                 ProductName = c.Product.Name,
                 ProductAmount = c.Product.Price
-            }).ToListAsync();
+            }).Skip(page).Take(recordsPerPage).ToListAsync();
         }
     }
 }

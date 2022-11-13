@@ -63,9 +63,9 @@ namespace BrainBox.Web.Controllers.Handlers
         /// Get all product category records
         /// </summary>
         /// <returns></returns>
-        public async Task<IList<ProductCategoryDTO>> GetAllAsync()
+        public async Task<IList<ProductCategoryDTO>> GetAllAsync(int page, int recordsPerPage)
         {
-            return await _productCategoryRepository.GetAllRecords();
+            return await _productCategoryRepository.GetAllRecords(page, recordsPerPage);
         }
 
         /// <summary>

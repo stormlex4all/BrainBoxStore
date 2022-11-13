@@ -12,11 +12,14 @@ namespace BrainBox.Web.Controllers.Handlers
     {
         private readonly ICartProductRepository _cartProductRepository;
         private readonly ICoreValidationService<CartProduct> _coreValidationService;
+        private readonly ICartRepository _cartRepository;
 
-        public CartProductHandler(ICartProductRepository cartProductRepository, ICoreValidationService<CartProduct> coreValidationService)
+        public CartProductHandler(ICartProductRepository cartProductRepository, ICoreValidationService<CartProduct> coreValidationService,
+                                ICartRepository cartRepository) 
         {
             _cartProductRepository = cartProductRepository;
             _coreValidationService = coreValidationService;
+            _cartRepository = cartRepository;
         }
 
         /// <summary>
@@ -25,21 +28,22 @@ namespace BrainBox.Web.Controllers.Handlers
         /// <param name="cartProduct"></param>
         /// <returns></returns>
         /// <exception cref="CartProductActionException"></exception>
-        public async Task<CartProductDTO> CreateAsync(CartProductDTO cartProduct)
+        public async Task<CartProductDTO> CreateAsync(CartProductCreateDTO cartProduct)
         {
-            await _coreValidationService.ValidateRecordWithConditionDoesNotExist(c => c.Product.Id == cartProduct.ProductId && c.Cart.Id == cartProduct.CartId);
+            string cartId = (await _cartRepository.GetByUserIdAsync(_cartProductRepository.GetTokenUserId())).Id;
+            await _coreValidationService.ValidateRecordWithConditionDoesNotExist(c => c.Product.Id == cartProduct.ProductId && c.Cart.Id == cartId);
             string id = Guid.NewGuid().ToString();
             if (!await _cartProductRepository.AddAsync(new CartProduct
             {
                 Id = id,
-                CartId = cartProduct.CartId,
+                CartId = cartId,
                 ProductId = cartProduct.ProductId
             }))
             {
                 throw new CartProductActionException(ResponseLang.CouldNotCreateRecord(nameof(CartProduct)));
             }
-            cartProduct.Id = id;
-            return cartProduct;
+
+            return new() {Id = id, CartId = cartId, ProductId = cartProduct.ProductId };
         }
 
         /// <summary>
@@ -59,15 +63,14 @@ namespace BrainBox.Web.Controllers.Handlers
         }
 
         /// <summary>
-        /// Delete cartProduct record from db using userId and productId
+        /// Delete product from cart using userId and productId
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="productId"></param>
         /// <returns></returns>
         /// <exception cref="CartProductActionException"></exception>
-        public async Task<bool> DeleteAsync(string userId, string productId)
+        public async Task<bool> DeleteByProductIdAsync(string productId)
         {
-            var cartProduct = await _cartProductRepository.GetAsync(c => c.Product.Id == productId && c.Cart.User.Id == userId);
+            var cartProduct = await _cartProductRepository.GetAsync(c => c.Product.Id == productId && c.Cart.User.Id == _cartProductRepository.GetTokenUserId());
             if (cartProduct == null)
             {
                 throw new CartProductActionException(ResponseLang.RecordNotFound());
@@ -78,11 +81,12 @@ namespace BrainBox.Web.Controllers.Handlers
         /// <summary>
         /// Get all cart products using userId
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="page"></param>
+        /// <param name="recordsPerPage"></param>
         /// <returns></returns>
-        public async Task<IList<CartProductDTO>> GetByUserIdAsync(string userId)
+        public async Task<IList<CartProductDTO>> GetByUserIdAsync(int page, int recordsPerPage)
         {
-            return await _cartProductRepository.GetAllAsync(c => c.Cart.User.Id == userId);
+            return await _cartProductRepository.GetAllAsync(c => c.Cart.User.Id == _cartProductRepository.GetTokenUserId(), page, recordsPerPage);
         }
     }
 }

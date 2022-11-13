@@ -11,6 +11,6 @@ namespace BrainBox.Repositories.Contracts
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        Task<IList<CartProductDTO>> GetAllAsync(Expression<Func<CartProduct, bool>> predicate);
+        Task<IList<CartProductDTO>> GetAllAsync(Expression<Func<CartProduct, bool>> predicate, int page = 0, int recordsPerPage = 10);
     }
 }

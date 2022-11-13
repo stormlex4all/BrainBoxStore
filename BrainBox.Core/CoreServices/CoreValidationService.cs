@@ -25,7 +25,7 @@ namespace BrainBox.Core.CoreServices
         {
             if (await _repository.CountAsync(predicate) > 0 && !silent)
             {
-                throw new SimilarRecordExistsException(Lang.ResponseLang.SimilarRecordExists(nameof(T)));
+                throw new SimilarRecordExistsException(Lang.ResponseLang.SimilarRecordExists(typeof(T).Name));
             }
         }
     }

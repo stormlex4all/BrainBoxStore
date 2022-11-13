@@ -26,7 +26,7 @@ namespace BrainBox.Web.Controllers.Handlers.Contracts
         /// Get all product records
         /// </summary>
         /// <returns></returns>
-        Task<IList<ProductDTO>> GetAllAsync();
+        Task<IList<ProductDTO>> GetAllAsync(int page, int recordsPerPage);
 
         /// <summary>
         /// Get all the product records as a list according to search params

@@ -9,7 +9,7 @@ namespace BrainBox.Repositories.Contracts
         /// Get all product records
         /// </summary>
         /// <returns></returns>
-        Task<List<ProductDTO>> GetAllRecords();
+        Task<List<ProductDTO>> GetAllRecords(int page = 0, int recordsPerPage = 10);
 
         /// <summary>
         /// Get all the product records as a list according to search params

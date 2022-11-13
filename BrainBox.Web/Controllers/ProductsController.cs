@@ -2,7 +2,6 @@
 using BrainBox.Core.Lang;
 using BrainBox.Data.DTOs;
 using BrainBox.Data.DTOs.Store;
-using BrainBox.Data.Models;
 using BrainBox.Web.Controllers.Handlers.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -41,6 +40,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to CreateProduct: {JsonConvert.SerializeObject(product)}");
                 if (!ModelState.IsValid)
                 {
@@ -68,15 +68,18 @@ namespace BrainBox.Web.Controllers
         /// <summary>
         /// Get All Products
         /// </summary>
+        /// <param name="page"></param>
+        /// <param name="recordsPerPage"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{page}/{recordsPerPage}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<IList<ProductDTO>>))]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts(int page = 0, int recordsPerPage = 10)
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to GetAllProducts:");
-                return Ok(new APIResponse<IList<ProductDTO>> { ResponseObject = await _productHandler.GetAllAsync() });
+                return Ok(new APIResponse<IList<ProductDTO>> { ResponseObject = await _productHandler.GetAllAsync(page, recordsPerPage) });
             }
             catch (Exception exception)
             {
@@ -96,6 +99,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to SearchProducts: {JsonConvert.SerializeObject(productSearch)}");
                 return Ok(new APIResponse<IList<ProductDTO>> { ResponseObject = await _productHandler.GetAllAsync(productSearch) });
             }
@@ -117,6 +121,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to GetProductById, id: {id}");
                 return Ok(new APIResponse<ProductDTO> { ResponseObject = await _productHandler.GetByIdAsync(id) });
             }
@@ -139,6 +144,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 product.Id = productId;
                 _logger.LogInformation($"Trying to UpdateProduct: {JsonConvert.SerializeObject(product)}");
                 if (!ModelState.IsValid)
@@ -174,6 +180,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to DeleteProduct, id: {productId}");
                 if (await _productHandler.DeleteAsync(productId))
                 {

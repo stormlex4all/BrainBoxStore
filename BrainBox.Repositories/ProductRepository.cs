@@ -4,6 +4,7 @@ using BrainBox.Data.DTOs.Store;
 using BrainBox.Data.Models;
 using BrainBox.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BrainBox.Repositories
 {
@@ -17,15 +18,17 @@ namespace BrainBox.Repositories
         /// Get all product records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProductDTO>> GetAllRecords()
+        public async Task<List<ProductDTO>> GetAllRecords(int page, int recordsPerPage)
         {
             return await _dbSet.Where(r => !r.IsDeleted).Select(c => new ProductDTO
             {
                 Id = c.Id,
                 Name = c.Name,
                 CreatedAt = c.CreatedAt,
-                CreatedBy = c.CreatedBy
-            }).ToListAsync();
+                CreatedBy = c.CreatedBy,
+                Price = c.Price,
+                ProductCategory = new ProductCategoryDTO { Id = c.ProductCategoryId, Name = c.ProductCategory.Name },
+            }).Skip(page).Take(recordsPerPage).ToListAsync();
         }
 
         /// <summary>
@@ -36,16 +39,18 @@ namespace BrainBox.Repositories
         public async Task<List<ProductDTO>> GetAllProductsAsync(ProductSearchDTO productSearch)
         {
             return await _dbSet.Where(r => 
-                (productSearch.ProductId != default && (r.Id == productSearch.ProductId)) ||
-                (!string.IsNullOrEmpty(productSearch.ProductName.Trim()) && r.Name.Contains(productSearch.ProductName)) ||
-                (productSearch.ProductCategoryId != default && (r.ProductCategory.Id == productSearch.ProductCategoryId)) ||
-                (!string.IsNullOrEmpty(productSearch.ProductCategoryName.Trim()) && r.ProductCategory.Name.Contains(productSearch.ProductCategoryName))
+                (!string.IsNullOrEmpty(productSearch.ProductId) && (r.Id == productSearch.ProductId)) ||
+                (!string.IsNullOrEmpty(productSearch.ProductName) && r.Name.Contains(productSearch.ProductName.Trim())) ||
+                (!string.IsNullOrEmpty(productSearch.ProductCategoryId) && (r.ProductCategory.Id == productSearch.ProductCategoryId)) ||
+                (!string.IsNullOrEmpty(productSearch.ProductCategoryName) && r.ProductCategory.Name.Contains(productSearch.ProductCategoryName.Trim()))
             ).Select(c => new ProductDTO
             {
                 Id = c.Id,
                 Name = c.Name,
                 CreatedAt = c.CreatedAt,
-                CreatedBy = c.CreatedBy
+                CreatedBy = c.CreatedBy,
+                Price = c.Price,
+                ProductCategory = new ProductCategoryDTO { Id = c.ProductCategoryId, Name = c.ProductCategory.Name },
             }).ToListAsync();
         }
 
@@ -61,7 +66,9 @@ namespace BrainBox.Repositories
                 Id = c.Id,
                 Name = c.Name,
                 CreatedAt = c.CreatedAt,
-                CreatedBy = c.CreatedBy
+                CreatedBy = c.CreatedBy,
+                Price = c.Price,
+                ProductCategory = new ProductCategoryDTO { Id = c.ProductCategoryId, Name = c.ProductCategory.Name },
             }).FirstOrDefaultAsync();
         }
     }

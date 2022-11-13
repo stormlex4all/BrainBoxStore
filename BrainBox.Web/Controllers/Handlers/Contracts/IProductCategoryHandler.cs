@@ -25,7 +25,7 @@ namespace BrainBox.Web.Controllers.Handlers.Contracts
         /// Gets All the ProductCategory records from DB
         /// </summary>
         /// <returns></returns>
-        Task<IList<ProductCategoryDTO>> GetAllAsync();
+        Task<IList<ProductCategoryDTO>> GetAllAsync(int page, int recordsPerPage);
 
         /// <summary>
         ///  Gets All the ProductCategory records from DB using an expression

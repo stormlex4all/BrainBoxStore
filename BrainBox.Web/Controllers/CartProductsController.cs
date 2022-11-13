@@ -37,10 +37,11 @@ namespace BrainBox.Web.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<CartProductDTO>))]
         [Route("add-product")]
-        public async Task<IActionResult> AddProductToCart(CartProductDTO cartProduct)
+        public async Task<IActionResult> AddProductToCart(CartProductCreateDTO cartProduct)
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to AddProductToCart: {JsonConvert.SerializeObject(cartProduct)}");
                 if (!ModelState.IsValid)
                 {
@@ -51,7 +52,7 @@ namespace BrainBox.Web.Controllers
             catch (SimilarRecordExistsException exception)
             {
                 _logger.LogError(exception, string.Format($"AddProductToCart exception {exception.Message}"));
-                return BadRequest(new APIResponse<string> { Error = true, ResponseObject = exception.Message });
+                return BadRequest(new APIResponse<string> { Error = true, ResponseObject = "This product has been added already!" });
             }
             catch (CartProductActionException exception)
             {
@@ -68,16 +69,18 @@ namespace BrainBox.Web.Controllers
         /// <summary>
         /// Get Products in a cart using user Id
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="page"></param>
+        /// <param name="recordsPerPage"></param>
         /// <returns></returns>
-        [HttpGet("{userId}")]
+        [HttpGet("{page}/{recordsPerPage}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<IList<CartProductDTO>>))]
-        public async Task<IActionResult> GetProductsInCart(string userId)
+        public async Task<IActionResult> GetProductsInCart(int page = 0, int recordsPerPage = 10)
         {
             try
             {
-                _logger.LogInformation($"Trying to GetProductsInCart, id: {userId}");
-                return Ok(new APIResponse<IList<CartProductDTO>> { ResponseObject = await _cartProductHandler.GetByUserIdAsync(userId) });
+                StoreToken();
+                _logger.LogInformation($"Trying to GetProductsInCart");
+                return Ok(new APIResponse<IList<CartProductDTO>> { ResponseObject = await _cartProductHandler.GetByUserIdAsync(page, recordsPerPage) });
             }
             catch (Exception exception)
             {
@@ -97,6 +100,7 @@ namespace BrainBox.Web.Controllers
         {
             try
             {
+                StoreToken();
                 _logger.LogInformation($"Trying to DeleteProductFromCart, id: {cartProductId}");
                 if (await _cartProductHandler.DeleteAsync(cartProductId))
                 {
@@ -104,7 +108,7 @@ namespace BrainBox.Web.Controllers
                 }
                 return BadRequest(new APIResponse<string> { Error = true, ResponseObject = ResponseLang.NotDeleted() });
             }
-            catch (ProductActionException exception)
+            catch (CartProductActionException exception)
             {
                 _logger.LogError(exception, string.Format($"DeleteProductFromCart exception {exception.Message}"));
                 return BadRequest(new APIResponse<string> { Error = true, ResponseObject = exception.Message });
@@ -117,25 +121,25 @@ namespace BrainBox.Web.Controllers
         }
 
         /// <summary>
-        /// Delete product from cart using userId and productId
+        /// Delete product from cart using productId
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="productId"></param>
         /// <returns></returns>
-        [HttpDelete("{userId}/{productId}")]
+        [HttpDelete("product/{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResponse<string>))]
-        public async Task<IActionResult> DeleteProductFromCart(string userId, string productId)
+        public async Task<IActionResult> DeleteProductByProductIdFromCart(string productId)
         {
             try
             {
-                _logger.LogInformation($"Trying to DeleteProductFromCart, userId: {userId}, productId: {productId}");
-                if (await _cartProductHandler.DeleteAsync(userId, productId))
+                StoreToken();
+                _logger.LogInformation($"Trying to DeleteProductFromCart productId: {productId}");
+                if (await _cartProductHandler.DeleteByProductIdAsync(productId))
                 {
                     return Ok(new APIResponse<string> { ResponseObject = ResponseLang.SuccessfullyDeleted() });
                 }
                 return BadRequest(new APIResponse<string> { Error = true, ResponseObject = ResponseLang.NotDeleted() });
             }
-            catch (ProductActionException exception)
+            catch (CartProductActionException exception)
             {
                 _logger.LogError(exception, string.Format($"DeleteProductFromCart exception {exception.Message}"));
                 return BadRequest(new APIResponse<string> { Error = true, ResponseObject = exception.Message });

@@ -10,7 +10,7 @@ namespace BrainBox.Repositories.Contracts
         /// Get all product category records
         /// </summary>
         /// <returns></returns>
-        Task<List<ProductCategoryDTO>> GetAllRecords();
+        Task<List<ProductCategoryDTO>> GetAllRecords(int page = 0, int recordsPerPage = 10);
 
         /// <summary>
         /// Get all the records of type T as a list according to predicate

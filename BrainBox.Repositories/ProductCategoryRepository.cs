@@ -18,7 +18,7 @@ namespace BrainBox.Repositories
         /// Get all product category records
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProductCategoryDTO>> GetAllRecords()
+        public async Task<List<ProductCategoryDTO>> GetAllRecords(int page, int recordsPerPage)
         {
             return await _dbSet.Where(r => !r.IsDeleted).Select(c => new ProductCategoryDTO
             {
@@ -26,7 +26,7 @@ namespace BrainBox.Repositories
                 Name = c.Name,
                 CreatedAt = c.CreatedAt,
                 CreatedBy = c.CreatedBy
-            }).ToListAsync();
+            }).Skip(page).Take(recordsPerPage).ToListAsync();
         }
 
         /// <summary>

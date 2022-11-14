@@ -1,1 +1,0 @@
-Solution for an imaginary E-Commerce Store

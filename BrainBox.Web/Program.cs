@@ -14,7 +14,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using POSSAP.Core.Configuration;
 using BrainBox.Data.DTOs;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 

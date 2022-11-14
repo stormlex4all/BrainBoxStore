@@ -118,7 +118,11 @@ app.UseSwaggerUI(c =>
     //c.RoutePrefix = string.Empty;
 });
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+
+app.UseDefaultFiles();
+
+app.UseStaticFiles();
 
 //Authentication and authorization
 app.UseAuthentication();

@@ -204,7 +204,7 @@ namespace BrainBox.Web.Controllers.Handlers
 
         private RefreshToken GetRefreshToken(string userEmail, bool isForTokenRefresh = true)
         {
-            string service = $"{nameof(CacheTenant.Authentication)}";
+            string service = $"{nameof(Service.Authentication)}";
             var rToken = ObjectCacheProvider.GetCachedObject<RefreshToken>(service, $"{nameof(CachePrefix.RefreshToken)}{userEmail}");
             if (rToken == null)
             {
